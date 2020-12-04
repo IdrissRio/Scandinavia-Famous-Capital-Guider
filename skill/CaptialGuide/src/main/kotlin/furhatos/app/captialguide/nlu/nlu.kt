@@ -19,6 +19,12 @@ class ChooseCity(var city : City? = null) : Intent() {
     }
 }
 
+class ChangeCity : Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("Change city", "I want to go somewhere else", "Please, switch city")
+    }
+}
+
 class GetInformation() : Intent(){
     override fun getExamples(lang: Language): List<String> {
         return listOf("I would like some information", "Information")
@@ -28,6 +34,12 @@ class GetInformation() : Intent(){
 class BookActivity() : Intent(){
     override fun getExamples(lang: Language): List<String> {
         return listOf("An activity would be great", "Book activity", "booking")
+    }
+}
+
+class ListActivites() : Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What were my options?", "Which activites were there?", "Tell me about the activities")
     }
 }
 

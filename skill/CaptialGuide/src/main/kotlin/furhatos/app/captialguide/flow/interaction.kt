@@ -23,12 +23,20 @@ val Start: State = state(Interaction) {
 //    }
 }
 
+fun DummyCityOptions(): State = state(CityOptions) {
+    onEntry {
+        furhat.ask("Is there another city you would like to visit?")
+        goto(CityOptions)
+    }
+}
+
 val CityOptions = state {
 
     onEntry {
         furhat.ask("Which city?")
 
     }
+
 
     onResponse<ChooseCity> {
         furhat.say("You chose ${it.intent.city?.text}")
@@ -40,13 +48,17 @@ val CityOptions = state {
         }
     }
 
+    onResponse<ChangeCity> {
+        goto(DummyCityOptions())
+    }
+
 }
 
 val BookingOptions = state {
 
 }
 
-val Options = state(Interaction) {
+fun Options(): State = state(CityOptions) {
 
     onEntry {
 
@@ -58,48 +70,95 @@ val Options = state(Interaction) {
     }
 
     onResponse<BookActivity> {
-        furhat.say("You would like to book an activity in ${users.current.information.city.toName()}")
+        goto(SuggestBookings(users.current.information.city))
     }
 
     onResponse<GetInformation> {
         goto(CityInformation)
+//        propagate()
+    }
 
+    onResponse<No> {
+        goto(Idle)
     }
 
 
 }
 
-val SuggestBookings = state {
+fun SuggestBookings(city: CityWithBooking): State = state(CityOptions) {
 
     onEntry {
+        val activities = users.current.information.city.getActivities()
+        furhat.say("Your activity options are")
+        activities.forEach {
+            furhat.say(it)
+        }
+        furhat.ask("Which activity would you like to book?")
 
     }
 
+    onReentry {
+        furhat.ask("Would you like to book another activity?")
+    }
+
+    onResponse(city.activityIntents) {
+        furhat.say("Done! ${it.intent} has been booked!")
+        reentry()
+    }
+
+    onResponse<ListActivites> {
+        val activities = users.current.information.city.getActivities()
+        activities.forEach {
+            furhat.say(it)
+        }
+        reentry()
+    }
+
 }
+
+
+//fun BookingReceived(activity: BookActivity): State = state(Options) {
+//    onEntry {
+//        furhat.say("${fruitList.text}, what a lovely choice!")
+//        fruitList.list.forEach {
+//            users.current.order.fruits.list.add(it)
+//        }
+//        furhat.ask("Anything else?")
+//    }
+//
+//    onReentry {
+//        furhat.ask("Did you want something else?")
+//    }
+//
+//    onResponse<No> {
+//        furhat.say("Okay, here is your order of ${users.current.order.fruits}. Have a great day!")
+//        goto(Idle)
+//    }
+//}
 
 val CityInformation = state {
 
     onEntry {
         furhat.say("I will tell you a fact")
         val city = users.current.information.city
-        furhat.say("You would like to get information about ${city.toName()}")
         furhat.say(city.tellHistory())
-//        goto(Options)
+        goto(Options())
     }
 
 
 }
 
-fun CityRecieved(city: City): State = state(Options) {
+fun CityRecieved(city: City): State = state {
     onEntry {
-        users.current.information.city = Class.forName("furhatos.app.captialguide." + city.name).kotlin.constructors.first().call(city) as CityWithBooking
-        goto(Options)
-//        furhat.say("You want ${city.text}")
-//        users.current.city = city
+        try {
+            users.current.information.city = Class.forName("furhatos.app.captialguide." + city.name).kotlin.constructors.first().call(city) as CityWithBooking
+        }
+        catch (e: java.lang.ClassNotFoundException){
+            furhat.say("Sorry, I don't have any information about ${city.name}")
+            goto(DummyCityOptions())
+        }
+        goto(Options())
     }
 
 }
 
-//fun TakeBookingOrder(order: BookingOrder): State = state {
-//
-//}

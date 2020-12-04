@@ -1,6 +1,8 @@
 package furhatos.app.captialguide.flow
 
+import furhatos.app.captialguide.Stockholm
 import furhatos.flow.kotlin.*
+import furhatos.nlu.wikidata.City
 import furhatos.util.*
 
 val Idle: State = state {
@@ -9,6 +11,7 @@ val Idle: State = state {
         furhat.setVoice(Language.ENGLISH_US, Gender.MALE)
         if (users.count > 0) {
             furhat.attend(users.random)
+//            goto(SuggestBookings(Stockholm(City("Stockholm"))))
             goto(Start)
         }
     }
@@ -20,6 +23,7 @@ val Idle: State = state {
     onUserEnter {
         furhat.attend(it)
         goto(Start)
+//        goto(SuggestBookings(Stockholm(City("Stockholm"))))
     }
 }
 
