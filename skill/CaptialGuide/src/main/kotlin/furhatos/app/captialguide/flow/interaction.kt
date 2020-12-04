@@ -65,9 +65,13 @@ val Options = state {
 
 val SuggestBookings = state {
 
+    onEntry {
+
+    }
+
 }
 
-val CityIntroduction = state {
+val CityInformation = state {
 
 
 }
