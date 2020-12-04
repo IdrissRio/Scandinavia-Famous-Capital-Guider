@@ -11,7 +11,6 @@ val Idle: State = state {
         furhat.setVoice(Language.ENGLISH_US, Gender.MALE)
         if (users.count > 0) {
             furhat.attend(users.random)
-//            goto(SuggestBookings(Stockholm(City("Stockholm"))))
             goto(Start)
         }
     }
@@ -23,7 +22,6 @@ val Idle: State = state {
     onUserEnter {
         furhat.attend(it)
         goto(Start)
-//        goto(SuggestBookings(Stockholm(City("Stockholm"))))
     }
 }
 
@@ -42,8 +40,17 @@ val Interaction: State = state {
         }
     }
 
-    onUserEnter(instant = true) {
-        furhat.glance(it)
+    onUserEnter() {
+//        furhat.glance(it)]
+        val current_user = users.current
+        
+        furhat.attend(it)
+        random(
+                { furhat.say("I'll be with you shortly, please have seat!") },
+                { furhat.say("Please leave.... now!") }
+        )
+        furhat.attend(current_user)
+        reentry()
     }
 
 }

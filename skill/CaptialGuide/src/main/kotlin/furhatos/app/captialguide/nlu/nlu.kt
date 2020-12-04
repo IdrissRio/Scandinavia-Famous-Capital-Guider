@@ -2,6 +2,7 @@ package furhatos.app.captialguide.nlu
 
 import furhatos.nlu.EnumEntity
 import furhatos.nlu.Intent
+import furhatos.nlu.ListEntity
 import furhatos.nlu.wikidata.City
 import furhatos.util.Language
 
@@ -43,4 +44,11 @@ class ListActivites() : Intent() {
     }
 }
 
+class ListBookedActivities : Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What have I booked?", "Which activities have I booked?")
+    }
+}
+
+//class ActivityList : ListEntity<String>()
 //class InformationOrBooking()

@@ -5,7 +5,6 @@ import furhatos.nlu.common.*
 import furhatos.flow.kotlin.*
 import furhatos.app.captialguide.nlu.*
 import furhatos.nlu.wikidata.City
-import furhatos.app.captialguide.Stockholm as Stockholm
 
 val Start: State = state(Interaction) {
 
@@ -14,23 +13,39 @@ val Start: State = state(Interaction) {
         goto(CityOptions)
     }
 
-//    onResponse<Yes> {
-//        furhat.say("I like humans.")
-//    }
-//
-//    onResponse<No> {
-//        furhat.say("That's sad.")
-//    }
+}
+
+val End: State = state {
+    onEntry {
+        val bookings = users.current.information.bookings
+        if (!bookings.isEmpty()) {
+            furhat.say("You have booked")
+            users.current.information.bookings.forEach {
+                furhat.say(it)
+            }
+        }
+        furhat.say("Goodbye and have a nice day")
+        goto(Idle)
+    }
 }
 
 fun DummyCityOptions(): State = state(CityOptions) {
     onEntry {
         furhat.ask("Is there another city you would like to visit?")
+
+    }
+
+    onResponse<Yes> {
         goto(CityOptions)
+    }
+
+
+    onResponse<No> {
+        goto(End)
     }
 }
 
-val CityOptions = state {
+val CityOptions = state(Interaction) {
 
     onEntry {
         furhat.ask("Which city?")
@@ -52,9 +67,18 @@ val CityOptions = state {
         goto(DummyCityOptions())
     }
 
-}
-
-val BookingOptions = state {
+    onResponse<ListBookedActivities> {
+        val bookings = users.current.information.bookings
+        if (bookings.isEmpty()) {
+            furhat.say("You have no booked activities.")
+        } else {
+            furhat.say("You have booked")
+            users.current.information.bookings.forEach {
+                furhat.say(it)
+            }
+        }
+        reentry()
+    }
 
 }
 
@@ -79,13 +103,13 @@ fun Options(): State = state(CityOptions) {
     }
 
     onResponse<No> {
-        goto(Idle)
+        goto(End)
     }
 
 
 }
 
-fun SuggestBookings(city: CityWithBooking): State = state(CityOptions) {
+fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
 
     onEntry {
         val activities = users.current.information.city.getActivities()
@@ -93,7 +117,7 @@ fun SuggestBookings(city: CityWithBooking): State = state(CityOptions) {
         activities.forEach {
             furhat.say(it)
         }
-        furhat.ask("Which activity would you like to book?")
+        furhat.ask("Is there an activity would you like to book?")
 
     }
 
@@ -103,6 +127,7 @@ fun SuggestBookings(city: CityWithBooking): State = state(CityOptions) {
 
     onResponse(city.activityIntents) {
         furhat.say("Done! ${it.intent} has been booked!")
+        users.current.information.bookings.add(it.intent.toString())
         reentry()
     }
 
@@ -114,27 +139,12 @@ fun SuggestBookings(city: CityWithBooking): State = state(CityOptions) {
         reentry()
     }
 
+    onResponse<No> {
+        goto(DummyCityOptions())
+    }
+
 }
 
-
-//fun BookingReceived(activity: BookActivity): State = state(Options) {
-//    onEntry {
-//        furhat.say("${fruitList.text}, what a lovely choice!")
-//        fruitList.list.forEach {
-//            users.current.order.fruits.list.add(it)
-//        }
-//        furhat.ask("Anything else?")
-//    }
-//
-//    onReentry {
-//        furhat.ask("Did you want something else?")
-//    }
-//
-//    onResponse<No> {
-//        furhat.say("Okay, here is your order of ${users.current.order.fruits}. Have a great day!")
-//        goto(Idle)
-//    }
-//}
 
 val CityInformation = state {
 
@@ -152,8 +162,7 @@ fun CityRecieved(city: City): State = state {
     onEntry {
         try {
             users.current.information.city = Class.forName("furhatos.app.captialguide." + city.name).kotlin.constructors.first().call(city) as CityWithBooking
-        }
-        catch (e: java.lang.ClassNotFoundException){
+        } catch (e: java.lang.ClassNotFoundException) {
             furhat.say("Sorry, I don't have any information about ${city.name}")
             goto(DummyCityOptions())
         }
