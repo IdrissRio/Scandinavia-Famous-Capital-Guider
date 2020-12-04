@@ -85,7 +85,6 @@ val CityOptions = state(Interaction) {
 fun Options(): State = state(CityOptions) {
 
     onEntry {
-
         furhat.ask("Would you like some information about ${users.current.information.city.toName()} or book an activity?")
     }
 
@@ -112,7 +111,7 @@ fun Options(): State = state(CityOptions) {
 fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
 
     onEntry {
-        val activities = users.current.information.city.getActivities()
+        val activities = users.current.information.city.activities
         furhat.say("Your activity options are")
         activities.forEach {
             furhat.say(it)
@@ -132,7 +131,7 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
     }
 
     onResponse<ListActivites> {
-        val activities = users.current.information.city.getActivities()
+        val activities = users.current.information.city.activities
         activities.forEach {
             furhat.say(it)
         }
@@ -142,7 +141,6 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
     onResponse<No> {
         goto(DummyCityOptions())
     }
-
 }
 
 
@@ -151,11 +149,10 @@ val CityInformation = state {
     onEntry {
         furhat.say("I will tell you a fact")
         val city = users.current.information.city
-        furhat.say(city.tellHistory())
+        val fact = city.facts.shuffled().takeLast(1)[0]
+        furhat.say(fact)
         goto(Options())
     }
-
-
 }
 
 fun CityRecieved(city: City): State = state {
