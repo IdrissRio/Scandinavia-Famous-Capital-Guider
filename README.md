@@ -3,7 +3,7 @@ The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in
 
 # TODO
  - [ ] Fix simpleintent (Idriss)
-    - [ ] Fix text representation
+    - [x] Fix text representation
     - [ ] Add city information per booked activity
     
  - [ ] Remove booked activities (Ciwan)
@@ -12,7 +12,7 @@ The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in
  - [ ] (Multiple users)
  - [x] List cities with information (Anton)
  - [ ] Add more cities and facts (Mandy)
- - [ ] Go straight to information or booking from choose city (Anton)
+ - [x] Go straight to information or booking from choose city (Anton)
  
  - [ ] Make video
  - [ ] A slide deck (Google slides, Mandy starts)
