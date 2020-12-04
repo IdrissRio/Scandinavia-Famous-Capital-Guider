@@ -4,6 +4,8 @@ import furhatos.app.captialguide.Stockholm
 import furhatos.flow.kotlin.*
 import furhatos.nlu.wikidata.City
 import furhatos.util.*
+import java.io.File
+import java.nio.file.FileSystems
 
 val Idle: State = state {
 
@@ -43,7 +45,7 @@ val Interaction: State = state {
     onUserEnter() {
 //        furhat.glance(it)]
         val current_user = users.current
-        
+
         furhat.attend(it)
         random(
                 { furhat.say("I'll be with you shortly, please have seat!") },

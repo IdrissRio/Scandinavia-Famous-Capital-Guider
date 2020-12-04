@@ -1,6 +1,7 @@
 package furhatos.app.captialguide.flow
 
 import furhatos.app.captialguide.CityWithBooking
+import furhatos.app.captialguide.available_cities
 import furhatos.nlu.common.*
 import furhatos.flow.kotlin.*
 import furhatos.app.captialguide.nlu.*
@@ -9,7 +10,9 @@ import furhatos.nlu.wikidata.City
 val Start: State = state(Interaction) {
 
     onEntry {
-        furhat.say("Hi there.")
+        furhat.say("Hi there!")
+        val lastCity = available_cities.last()
+        furhat.say("I have information about ${available_cities.take(available_cities.size-1).joinToString(" ")} and $lastCity")
         goto(CityOptions)
     }
 
@@ -48,7 +51,7 @@ fun DummyCityOptions(): State = state(CityOptions) {
 val CityOptions = state(Interaction) {
 
     onEntry {
-        furhat.ask("Which city?")
+        furhat.ask("Which city are you interested in?")
 
     }
 

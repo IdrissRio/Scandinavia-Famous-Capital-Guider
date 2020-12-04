@@ -10,7 +10,7 @@ The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in
  - [ ] Add more intent matches/sentences (Ciwan)
  - [ ] More varied sentences (not always "Which city?") (Yu)
  - [ ] (Multiple users)
- - [ ] List cities with information (Anton)
+ - [x] List cities with information (Anton)
  - [ ] Add more cities and facts (Mandy)
  - [ ] Go straight to information or booking from choose city (Anton)
  
