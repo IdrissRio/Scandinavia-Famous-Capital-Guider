@@ -1,10 +1,11 @@
 package furhatos.app.captialguide.flow
+import furhatos.app.captialguide.CityWithBooking
 import furhatos.records.User
 import furhatos.app.captialguide.nlu.CityName
 import furhatos.nlu.wikidata.City
 
 class UserInfromation (
-        var city: City = City()
+        var city: CityWithBooking = CityWithBooking(City())
 )
 
 val User.information : UserInfromation
