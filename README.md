@@ -7,7 +7,7 @@ The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in
     - [ ] Add city information per booked activity
     
  - [ ] Remove booked activities (Ciwan)
- - [ ] Add more intent matches/sentences (Ciwan)
+ - [x] Add more intent matches/sentences (Ciwan)
  - [ ] More varied sentences (not always "Which city?") (Yu)
  - [ ] (Multiple users)
  - [x] List cities with information (Anton)
