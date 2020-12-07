@@ -11,7 +11,7 @@ The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in
  - [x] More varied sentences (not always "Which city?") (Yu)
  - [ ] (Multiple users)
  - [x] List cities with information (Anton)
- - [ ] Add more cities and facts (Mandy)
+ - [x] Add more cities and facts (Mandy)
  - [x] Go straight to information or booking from choose city (Anton)
  
  - [ ] Make video
