@@ -35,7 +35,8 @@ class ChangeCity : Intent() {
                 "I want to go somewhere else",
                 "I want to go to a different city",
                 "I would like to visit a different city",
-                "Please, switch city"
+                "Please, switch city",
+                "Another city"
         )
     }
 }
@@ -83,7 +84,9 @@ class ListActivites() : Intent() {
                 "What were my options?",
                 "Which activities were there?",
                 "Tell me about the activities",
-                "Which activities are there?"
+                "Which activities are there?",
+                "What activities do you have?",
+                "What activities?"
         )
     }
 }
@@ -95,7 +98,8 @@ class ListBookedActivities : Intent() {
                 "List current activities",
                 "What have I booked?",
                 "Which activities have I booked?",
-                "What are my current bookings?"
+                "What are my current bookings?",
+                "What do I have?"
         )
     }
 }
