@@ -14,12 +14,12 @@ import furhatos.util.Language
 val Start: State = state(Interaction) {
 
     onEntry {
-        var furhatName = "My name is "
+        val furhatName = "My name is Palantir, and I am your personal guide."
         random(
-                {furhat.say("Hi there!")},
-                {furhat.say("Hello there!")},
-                {furhat.say("Hello!")},
-                {furhat.say("Hi!")}
+                {furhat.say("Hi there! $furhatName")},
+                {furhat.say("Hello there! $furhatName")},
+                {furhat.say("Hello! $furhatName")},
+                {furhat.say("Hi! $furhatName")}
         )
         val lastCity = available_cities.last()
         furhat.say("I have information about ${available_cities.take(available_cities.size - 1).joinToString(" ")} and $lastCity")
@@ -33,12 +33,12 @@ val Start: State = state(Interaction) {
 val End: State = state {
     onEntry {
         if(users.current.information.hasActivities()){
-            furhat.say{"Before you leave, a brief recap of your booked activities"}
+             furhat.say ( "Before you leave, a brief recap of your booked activities" )
         }
             for((k,v) in users.current.information.cityActivities){
                 if(v.isNotEmpty()){
                     random(
-                            {furhat.say("In $k you booked activities in the following place:" )},
+                            {furhat.say("In $k you booked activities in:" )},
                             { furhat.say("In $k you have booked activities at:") },
                             { furhat.say("In $k your booked activities are:") }
                     )
