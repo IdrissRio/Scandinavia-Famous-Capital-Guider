@@ -14,6 +14,7 @@ import furhatos.util.Language
 val Start: State = state(Interaction) {
 
     onEntry {
+        var furhatName = "My name is "
         random(
                 {furhat.say("Hi there!")},
                 {furhat.say("Hello there!")},
@@ -31,6 +32,9 @@ val Start: State = state(Interaction) {
 
 val End: State = state {
     onEntry {
+        if(users.current.information.hasActivities()){
+            furhat.say{"Before you leave, a brief recap of your booked activities"}
+        }
             for((k,v) in users.current.information.cityActivities){
                 if(v.isNotEmpty()){
                     random(
@@ -216,7 +220,7 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
     }
 
     onReentry {
-        if (users.current.information.bookings.isNotEmpty()) {
+        if (users.current.information.hasActivities()) {
             random(
                     {furhat.ask("Would you like to book another activity?")},
                     {furhat.ask("Would you like to book one more?")},
@@ -242,7 +246,6 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
                 {furhat.say("Now you have ${it.intent}!")}
         )
         addActivityToCity(city.toName(), it.intent.toString(), users.current.information.cityActivities)
-        users.current.information.bookings.add(it.intent.toString())
         reentry()
     }
 
@@ -280,7 +283,6 @@ fun RecievedCityAndActivity(city: City, activity: Activity?) = state {
                 if (cityBookedActivities.joinToString(" ").contains(activity.toString(), ignoreCase = true)) {
                     furhat.say("$activity has been booked in ${city.toName()}")
                     addActivityToCity(city.toName(), activity.toString(), users.current.information.cityActivities)
-                    users.current.information.bookings.add(activity.toString())
                 } else {
                     random(
                             {furhat.say("Sorry, I do not have a record of that activity in ${city.toName()}")},
