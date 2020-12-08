@@ -7,6 +7,7 @@ import furhatos.nlu.wikidata.City
 
 
 class UserInformation(
+        var cityActivities:HashMap<String,MutableList<String>> = HashMap<String,MutableList<String>>(),
         var city: CityWithBooking = CityWithBooking(City()),
         var bookings: MutableList<String> = mutableListOf()
 )

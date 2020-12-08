@@ -63,7 +63,7 @@ class BookActivity(val activity: Activity? = null) : Intent() {
                 "Book activity",
                 "Booking",
                 "Activity",
-                "Activities"
+                "Activities",
                 "What activities are there?",
                 "Tell me about the activities",
                 "I want to book @activity",

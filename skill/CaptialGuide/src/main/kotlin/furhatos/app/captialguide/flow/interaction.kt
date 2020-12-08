@@ -27,19 +27,22 @@ val Start: State = state(Interaction) {
 
 }
 
+
+
 val End: State = state {
     onEntry {
-        val bookings = users.current.information.bookings
-        if (bookings.isNotEmpty()) {
-            random(
-                    {furhat.say("You have booked")},
-                    {furhat.say("You have already booked")},
-                    {furhat.say("Now you have")},
-                    {furhat.say("You have")}
-            )
-            users.current.information.bookings.forEach {
-                furhat.say(it)
-            }
+            for((k,v) in users.current.information.cityActivities){
+                if(v.isNotEmpty()){
+                    random(
+                            {furhat.say("In $k you booked activities in the following place:" )},
+                            { furhat.say("In $k you have booked activities at:") },
+                            { furhat.say("In $k your booked activities are:") }
+                    )
+
+                    v.forEach {
+                        furhat.say(it)
+                    }
+                }
         }
         random(
                 {furhat.say("Goodbye and have a nice day")},
@@ -131,24 +134,27 @@ val CityOptions = state(Interaction) {
     }
 
     onResponse<ListBookedActivities> {
-        val bookings = users.current.information.bookings
-        if (bookings.isEmpty()) {
+        var isCompletelyEmpty = true
+        for((k,v) in users.current.information.cityActivities) {
+            if (v.isNotEmpty()) {
+                random(
+                        {furhat.say("In $k you booked activities in the following place:" )},
+                        { furhat.say("In $k you have booked activities at:") },
+                        { furhat.say("In $k your booked activities are:") }
+                )
+                isCompletelyEmpty = false
+                v.forEach {
+                    furhat.say(it)
+                }
+            }
+        }
+        if(isCompletelyEmpty){
             random(
                     {furhat.say("You have no booked activities.")},
                     {furhat.say("You have not booked any activities.")},
                     {furhat.say("No activity has been booked.")},
                     {furhat.say("There is no activity has been booked.")}
             )
-        } else {
-            random(
-                    {furhat.say("You have booked")},
-                    {furhat.say("You have already booked")},
-                    {furhat.say("Now you have")},
-                    {furhat.say("You have")}
-            )
-            users.current.information.bookings.forEach {
-                furhat.say(it)
-            }
         }
         reentry()
     }
@@ -235,6 +241,7 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
                 {furhat.say("All right! ${it.intent} has been booked!")},
                 {furhat.say("Now you have ${it.intent}!")}
         )
+        addActivityToCity(city.toName(), it.intent.toString(), users.current.information.cityActivities)
         users.current.information.bookings.add(it.intent.toString())
         reentry()
     }
@@ -253,16 +260,26 @@ fun SuggestBookings(city: CityWithBooking): State = state(Options()) {
     }
 }
 
+fun addActivityToCity(city: String, activity:String, cityActivities: HashMap<String,MutableList<String>>) {
+    var setOfActivities = cityActivities[city]
+    if(setOfActivities == null){
+        setOfActivities = mutableListOf()
+    }
+    setOfActivities.add(activity)
+    cityActivities[city] = setOfActivities
+}
+
 fun RecievedCityAndActivity(city: City, activity: Activity?) = state {
 
     onEntry {
         try {
             users.current.information.city = Class.forName("furhatos.app.captialguide." + city.name).kotlin.constructors.first().call(city) as CityWithBooking
             val city = users.current.information.city
-            val cityActivities = (city.getIntents() as EnumEntity).getEnum(Language.ENGLISH_US)
+            val cityBookedActivities = (city.getIntents() as EnumEntity).getEnum(Language.ENGLISH_US)
             if (activity != null) {
-                if (cityActivities.joinToString(" ").contains(activity.toString(), ignoreCase = true)) {
+                if (cityBookedActivities.joinToString(" ").contains(activity.toString(), ignoreCase = true)) {
                     furhat.say("$activity has been booked in ${city.toName()}")
+                    addActivityToCity(city.toName(), activity.toString(), users.current.information.cityActivities)
                     users.current.information.bookings.add(activity.toString())
                 } else {
                     random(

@@ -25,8 +25,8 @@ open class CityWithBooking(val city: City) {
     open val activities = emptyList<String>()
     open val facts = emptyList<String>()
 
-    fun toName(): String? {
-        return city.name
+    fun toName(): String {
+        return city.name!!
     }
 }
 
