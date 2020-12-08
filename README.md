@@ -2,9 +2,9 @@
 The idea is: instead of guessing the capitals, we will choose 3 or 4 capitals in the Scandinavia countries, introduce some basic information to the users, and help the users to book some activities/trips to the city.
 
 # TODO
- - [ ] Fix simpleintent (Idriss)
+ - [x] Fix simpleintent (Idriss)
     - [x] Fix text representation
-    - [ ] Add city information per booked activity
+    - [x] Add city information per booked activity
     
  - [ ] Remove booked activities (Ciwan)
  - [x] Add more intent matches/sentences (Ciwan)
